@@ -1,0 +1,13 @@
+{
+"name": "indice-dashboard",
+"version": "1.0.0",
+"description": "Dashboard de fluxo para mini índice",
+"main": "server.js",
+"scripts": {
+"start": "node server.js"
+},
+"dependencies": {
+"express": "^4.18.2",
+"node-fetch": "^2.6.7"
+}
+}
