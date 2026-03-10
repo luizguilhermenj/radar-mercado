@@ -1,86 +1,145 @@
-const express = require('express');
-const yahooFinance = require('yahoo-finance2').default;
+const express = require("express");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(__dirname));
 
-const TICKERS = {
-  PETR4: 'PETR4.SA',
-  VALE3: 'VALE3.SA',
-  EWZ: 'EWZ',
-  BRENT: 'BZ=F',
-  VIX: '^VIX',
-};
-
-const REFRESH_INTERVAL_MS = 2000;
-
-let quotesCache = {};
-let lastUpdated = null;
-
-function toNumber(value) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number : null;
-}
-
-function formatNumber(value) {
-  return value === null ? null : Number(value.toFixed(2));
-}
-
-async function fetchQuote(symbol) {
-  const quote = await yahooFinance.quote(symbol);
-
-  const price =
-    toNumber(quote.regularMarketPrice) ??
-    toNumber(quote.postMarketPrice) ??
-    toNumber(quote.preMarketPrice);
-
-  const changePercent =
-    toNumber(quote.regularMarketChangePercent) ??
-    toNumber(quote.postMarketChangePercent) ??
-    toNumber(quote.preMarketChangePercent);
-
-  return {
-    price: formatNumber(price),
-    change: formatNumber(changePercent),
-    currency: quote.currency || null,
-    marketState: quote.marketState || null,
-    sourceSymbol: symbol,
+async function fetchBrazil() {
+  const body = {
+    symbols: {
+      tickers: [
+        "BMFBOVESPA:PETR4",
+        "BMFBOVESPA:VALE3"
+      ]
+    },
+    columns: [
+      "close",
+      "change"
+    ]
   };
-}
 
-async function refreshQuotes() {
-  try {
-    const entries = await Promise.all(
-      Object.entries(TICKERS).map(async ([name, symbol]) => {
-        const data = await fetchQuote(symbol);
-        return [name, data];
-      })
-    );
-
-    quotesCache = Object.fromEntries(entries);
-    lastUpdated = new Date().toISOString();
-
-    console.log(`[quotes] atualizadas em ${lastUpdated}`);
-  } catch (error) {
-    console.error('[quotes] erro ao atualizar cotações:', error.message);
-  }
-}
-
-app.get('/api/quotes', async (req, res) => {
-  if (!lastUpdated) {
-    await refreshQuotes();
-  }
-
-  res.json({
-    updatedAt: lastUpdated,
-    assets: quotesCache,
+  const response = await fetch("https://scanner.tradingview.com/brazil/scan", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
   });
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar scanner Brasil");
+  }
+
+  const json = await response.json();
+  const result = {};
+
+  json.data.forEach(item => {
+    const symbol = item.s.split(":")[1];
+
+    result[symbol] = {
+      price: item.d[0],
+      change: item.d[1]
+    };
+  });
+
+  return result;
+}
+
+async function fetchGlobal() {
+  const body = {
+    symbols: {
+      tickers: [
+        "AMEX:EWZ",
+        "TVC:VIX",
+        "TVC:DXY"
+      ]
+    },
+    columns: [
+      "close",
+      "change"
+    ]
+  };
+
+  const response = await fetch("https://scanner.tradingview.com/global/scan", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar scanner Global");
+  }
+
+  const json = await response.json();
+  const result = {};
+
+  json.data.forEach(item => {
+    const symbol = item.s.split(":")[1];
+
+    result[symbol] = {
+      price: item.d[0],
+      change: item.d[1]
+    };
+  });
+
+  return result;
+}
+
+async function fetchEWZAfter() {
+  try {
+    const response = await fetch("https://query1.finance.yahoo.com/v7/finance/quote?symbols=EWZ", {
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Yahoo HTTP ${response.status}`);
+    }
+
+    const json = await response.json();
+    const q = json?.quoteResponse?.result?.[0];
+
+    if (!q) {
+      return null;
+    }
+
+    return {
+      price: q.postMarketPrice ?? null,
+      change: q.postMarketChangePercent ?? null
+    };
+  } catch (error) {
+    console.log("EWZ after indisponível:", error.message);
+    return null;
+  }
+}
+
+app.get("/api/quotes", async (req, res) => {
+  try {
+    const br = await fetchBrazil();
+    const gl = await fetchGlobal();
+    const ewzAfter = await fetchEWZAfter();
+
+    res.json({
+      PETR4: br.PETR4 || null,
+      VALE3: br.VALE3 || null,
+      EWZ: {
+        ...(gl.EWZ || {}),
+        after_price: ewzAfter?.price ?? null,
+        after_change: ewzAfter?.change ?? null
+      },
+      VIX: gl.VIX || null,
+      DXY: gl.DXY || null
+    });
+  } catch (err) {
+    console.error("Erro em /api/quotes:", err.message);
+    res.status(500).json({ error: "erro ao buscar dados" });
+  }
 });
 
-app.listen(PORT, async () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  await refreshQuotes();
-  setInterval(refreshQuotes, REFRESH_INTERVAL_MS);
+app.listen(PORT, () => {
+  console.log("Servidor rodando na porta " + PORT);
 });
