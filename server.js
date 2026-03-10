@@ -88,7 +88,7 @@ async function fetchGlobal() {
   return result;
 }
 
-async function fetchEWZAfter() {
+async function fetchEWZExtended() {
   try {
     const response = await fetch("https://query1.finance.yahoo.com/v7/finance/quote?symbols=EWZ", {
       headers: {
@@ -108,11 +108,13 @@ async function fetchEWZAfter() {
     }
 
     return {
-      price: q.postMarketPrice ?? null,
-      change: q.postMarketChangePercent ?? null
+      pre_price: q.preMarketPrice ?? null,
+      pre_change: q.preMarketChangePercent ?? null,
+      post_price: q.postMarketPrice ?? null,
+      post_change: q.postMarketChangePercent ?? null
     };
   } catch (error) {
-    console.log("EWZ after indisponível:", error.message);
+    console.log("EWZ extended indisponível:", error.message);
     return null;
   }
 }
@@ -121,15 +123,17 @@ app.get("/api/quotes", async (req, res) => {
   try {
     const br = await fetchBrazil();
     const gl = await fetchGlobal();
-    const ewzAfter = await fetchEWZAfter();
+    const ewzExtended = await fetchEWZExtended();
 
     res.json({
       PETR4: br.PETR4 || null,
       VALE3: br.VALE3 || null,
       EWZ: {
         ...(gl.EWZ || {}),
-        after_price: ewzAfter?.price ?? null,
-        after_change: ewzAfter?.change ?? null
+        pre_price: ewzExtended?.pre_price ?? null,
+        pre_change: ewzExtended?.pre_change ?? null,
+        post_price: ewzExtended?.post_price ?? null,
+        post_change: ewzExtended?.post_change ?? null
       },
       VIX: gl.VIX || null,
       DXY: gl.DXY || null

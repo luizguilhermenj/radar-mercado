@@ -27,9 +27,8 @@ function atualizar(id, ativo){
   colorir(c, change);
 }
 
-function atualizarEWZ(ewz){
-
-  if(!ewz) return;
+function atualizarEWZ(ewz) {
+  if (!ewz) return;
 
   const p = document.getElementById("ewz_price");
   const c = document.getElementById("ewz_change");
@@ -40,23 +39,47 @@ function atualizarEWZ(ewz){
 
   p.innerText = price;
   c.innerText = change;
-
   colorir(c, change);
 
-  if(ewz.after_price){
-    const ap = Number(ewz.after_price).toFixed(2);
-    const ac = Number(ewz.after_change).toFixed(2);
-    a.innerText = ap + " ("+ac+"%)";
-  }else{
-    a.innerText = "--";
+  const agora = new Date();
+  const hora = agora.getHours();
+  const minuto = agora.getMinutes();
+  const totalMin = hora * 60 + minuto;
+
+  const inicioPre = 5 * 60;       // 05:00
+  const fimPre = 10 * 60 + 30;    // 10:30
+  const inicioAfter = 17 * 60;    // 17:00
+  const fimAfter = 21 * 60;       // 21:00
+
+  const emPre = totalMin >= inicioPre && totalMin < fimPre;
+  const emAfter = totalMin >= inicioAfter && totalMin < fimAfter;
+
+  if (emPre && ewz.pre_price != null) {
+    const ep = Number(ewz.pre_price).toFixed(2);
+    const ec = Number(ewz.pre_change).toFixed(2);
+    a.innerText = "PRE: " + ep + " (" + ec + "%)";
+    colorir(a, ewz.pre_change);
+    return;
   }
+
+  if (emAfter && ewz.post_price != null) {
+    const ep = Number(ewz.post_price).toFixed(2);
+    const ec = Number(ewz.post_change).toFixed(2);
+    a.innerText = "AFTER: " + ep + " (" + ec + "%)";
+    colorir(a, ewz.post_change);
+    return;
+  }
+
+  a.innerText = "--";
+  a.style.color = "white";
 }
 
-function colorir(el,val){
+function colorir(el, val) {
+  const n = Number(val);
 
-  if(val>0) el.style.color="#22c55e";
-  else if(val<0) el.style.color="#ef4444";
-  else el.style.color="white";
+  if (n > 0) el.style.color = "#22c55e";
+  else if (n < 0) el.style.color = "#ef4444";
+  else el.style.color = "white";
 }
 
 setInterval(atualizarRadar,2000);
