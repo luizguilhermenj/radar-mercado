@@ -34,21 +34,30 @@ async function atualizarRadar() {
 
     atualizarEWZ(data.EWZ);
 
-    atualizarAtivo("VIX", data.VIX, {
-      price: "vix_price",
-      change: "vix_change",
-      direction: "vix_direction"
-    }, true);
+    atualizarAtivo(
+      "VIX",
+      data.VIX,
+      {
+        price: "vix_price",
+        change: "vix_change",
+        direction: "vix_direction"
+      },
+      true
+    );
 
-    atualizarAtivo("DXY", data.DXY, {
-      price: "dxy_price",
-      change: "dxy_change",
-      direction: "dxy_direction"
-    }, true);
+    atualizarAtivo(
+      "DXY",
+      data.DXY,
+      {
+        price: "dxy_price",
+        change: "dxy_change",
+        direction: "dxy_direction"
+      },
+      true
+    );
 
     atualizarDI(data.DI1FUT);
-
-    atualizarResumo(data);
+    atualizarResumo(data.indiceRadar);
     atualizarStatus("online");
 
     document.getElementById("updateTime").innerText =
@@ -171,91 +180,74 @@ function atualizarDI(di) {
 
   if (changeValue > 0) {
     direcao = "Pressão no índice";
+    directionEl.className = "";
+    directionEl.classList.add("neg");
   } else if (changeValue < 0) {
     direcao = "Alívio no índice";
+    directionEl.className = "";
+    directionEl.classList.add("pos");
+  } else {
+    directionEl.className = "";
+    directionEl.classList.add("neutral");
   }
 
   directionEl.innerText = direcao;
-  aplicarCor(directionEl, changeValue);
 }
 
-function atualizarResumo(data) {
-  const ativos = [
-    { nome: "PETR4", valor: Number(data?.PETR4?.change ?? 0) },
-    { nome: "VALE3", valor: Number(data?.VALE3?.change ?? 0) },
-    { nome: "IFNC", valor: Number(data?.IFNC?.change ?? 0) },
-    { nome: "ICON", valor: Number(data?.ICON?.change ?? 0) },
-    { nome: "EWZ", valor: Number(data?.EWZ?.change ?? 0) },
-    { nome: "VIX", valor: Number(data?.VIX?.change ?? 0) },
-    { nome: "DXY", valor: Number(data?.DXY?.change ?? 0) }
-  ];
+function atualizarResumo(indiceRadar) {
+  if (!indiceRadar) return;
 
-  const bullCount = ativos.filter(a => a.valor > 0).length;
-  const bearCount = ativos.filter(a => a.valor < 0).length;
-  const total = ativos.length || 1;
+  const bullPct = Number(indiceRadar.bullPercent ?? 50);
+  const bearPct = Number(indiceRadar.bearPercent ?? 50);
 
-  const bullPct = Math.round((bullCount / total) * 100);
-  const bearPct = 100 - bullPct;
+  const bullBar = document.getElementById("bullBar");
+  const bearBar = document.getElementById("bearBar");
 
-  document.getElementById("bullBar").style.width = `${bullPct}%`;
-  document.getElementById("bearBar").style.width = `${bearPct}%`;
+  bullBar.style.width = `${bullPct}%`;
+  bearBar.style.width = `${bearPct}%`;
+
   document.getElementById("bullText").innerText = `Bull ${bullPct}%`;
   document.getElementById("bearText").innerText = `Bear ${bearPct}%`;
   document.getElementById("sentimentValue").innerText = `${bullPct}% / ${bearPct}%`;
 
-  const brScore =
-    Number(data?.PETR4?.change ?? 0) +
-    Number(data?.VALE3?.change ?? 0) +
-    Number(data?.IFNC?.change ?? 0) +
-    Number(data?.ICON?.change ?? 0);
+  const brScore = Number(indiceRadar?.tactical?.brasilScore ?? 0);
+  const globalScore = Number(indiceRadar?.tactical?.globalScore ?? 0);
 
-  const globalScore =
-    Number(data?.EWZ?.change ?? 0) -
-    Number(data?.VIX?.change ?? 0) -
-    Number(data?.DXY?.change ?? 0);
+  document.getElementById("brStrength").innerText = prefixarNumero(brScore);
+  document.getElementById("globalStrength").innerText = prefixarNumero(globalScore);
+  document.getElementById("riskMode").innerText = indiceRadar.riskMode ?? "Neutro";
 
-  document.getElementById("brStrength").innerText =
-    brScore >= 0 ? `+${brScore.toFixed(2)}` : brScore.toFixed(2);
+  aplicarCor(document.getElementById("brStrength"), brScore);
+  aplicarCor(document.getElementById("globalStrength"), globalScore);
 
-  document.getElementById("globalStrength").innerText =
-    globalScore >= 0 ? `+${globalScore.toFixed(2)}` : globalScore.toFixed(2);
+  const riskEl = document.getElementById("riskMode");
+  riskEl.classList.remove("pos", "neg", "neutral");
 
-  let riskMode = "Neutro";
-  const vixChange = Number(data?.VIX?.change ?? 0);
-  const dxyChange = Number(data?.DXY?.change ?? 0);
-
-  if (vixChange > 0 || dxyChange > 0) riskMode = "Risco alto";
-  if (vixChange < 0 && dxyChange < 0) riskMode = "Risco aliviando";
-
-  document.getElementById("riskMode").innerText = riskMode;
-
-  const marketMoodTitle = document.getElementById("marketMoodTitle");
-  const marketMoodText = document.getElementById("marketMoodText");
-  const tradeCall = document.getElementById("tradeCall");
-  const tradeSummary = document.getElementById("tradeSummary");
-
-  if (bullPct >= 60 && brScore > 0 && globalScore > -1) {
-    marketMoodTitle.innerText = "Mercado com inclinação compradora";
-    marketMoodText.innerText =
-      "Os principais vetores do radar mostram sustentação melhor no bloco doméstico, com leitura geral mais favorável para continuidade ou defesa de suporte.";
-    tradeCall.innerText = "Compradores no controle";
-    tradeSummary.innerText =
-      "PETR4, VALE3, IFNC e ICON ajudam a sustentar o tom local. Se o risco global não apertar, o índice tende a responder melhor.";
-  } else if (bearPct >= 60 || vixChange > 0.8 || dxyChange > 0.4) {
-    marketMoodTitle.innerText = "Ambiente mais sensível ao risco";
-    marketMoodText.innerText =
-      "O radar mostra aumento de pressão defensiva. Com volatilidade ou dólar fortalecendo, o mercado tende a perder fluidez compradora.";
-    tradeCall.innerText = "Cenário pede cautela";
-    tradeSummary.innerText =
-      "Se VIX e DXY continuarem firmes, vale respeitar máximas e evitar compras afoitas no índice.";
+  if ((indiceRadar.bias || "").includes("compra")) {
+    riskEl.classList.add("pos");
+  } else if ((indiceRadar.bias || "").includes("venda")) {
+    riskEl.classList.add("neg");
   } else {
-    marketMoodTitle.innerText = "Contexto misto no radar";
-    marketMoodText.innerText =
-      "Há sinais cruzados entre força local e pressão externa. O melhor uso do painel agora é mapear quem está puxando e quem está travando o índice.";
-    tradeCall.innerText = "Mercado em definição";
-    tradeSummary.innerText =
-      "Sem domínio claro. A leitura favorece seleção de contexto e gestão curta até aparecer direção mais limpa.";
+    riskEl.classList.add("neutral");
   }
+
+  document.getElementById("marketMoodTitle").innerText =
+    indiceRadar?.quickRead?.title ?? "Leitura indisponível";
+
+  document.getElementById("marketMoodText").innerText =
+    indiceRadar?.quickRead?.text ?? "Sem dados suficientes para montar a leitura.";
+
+  document.getElementById("tradeCall").innerText =
+    indiceRadar?.resumoOperacional?.title ?? "Sem resumo";
+
+  let resumo = indiceRadar?.resumoOperacional?.text ?? "Sem resumo operacional.";
+  const conviccao = Number(indiceRadar?.conviction ?? 0);
+
+  if (conviccao > 0) {
+    resumo += ` Convicção do radar: ${conviccao}%.`;
+  }
+
+  document.getElementById("tradeSummary").innerText = resumo;
 }
 
 function atualizarStatus(tipo) {
@@ -279,11 +271,13 @@ function preencherAtivoIndisponivel(ids) {
   const directionEl = document.getElementById(ids.direction);
 
   if (priceEl) priceEl.innerText = "--";
+
   if (changeEl) {
     changeEl.innerText = "Indisponível";
     changeEl.className = "";
     changeEl.classList.add("neutral");
   }
+
   if (directionEl) {
     directionEl.innerText = "Sem leitura";
     directionEl.className = "";
@@ -312,6 +306,12 @@ function formatarPercentual(valor) {
   if (valor == null || Number.isNaN(Number(valor))) return "--";
   const n = Number(valor);
   return `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
+}
+
+function prefixarNumero(valor) {
+  const n = Number(valor ?? 0);
+  if (!Number.isFinite(n)) return "--";
+  return n >= 0 ? `+${n.toFixed(2)}` : n.toFixed(2);
 }
 
 setInterval(atualizarRadar, 4000);
