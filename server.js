@@ -10,7 +10,9 @@ async function fetchBrazil() {
     symbols: {
       tickers: [
         "BMFBOVESPA:PETR4",
-        "BMFBOVESPA:VALE3"
+        "BMFBOVESPA:VALE3",
+        "BMFBOVESPA:IFNC",
+        "BMFBOVESPA:ICON"
       ]
     },
     columns: [
@@ -34,14 +36,16 @@ async function fetchBrazil() {
   const json = await response.json();
   const result = {};
 
-  json.data.forEach(item => {
-    const symbol = item.s.split(":")[1];
+  if (Array.isArray(json.data)) {
+    json.data.forEach(item => {
+      const rawSymbol = item.s.split(":")[1];
 
-    result[symbol] = {
-      price: item.d[0],
-      change: item.d[1]
-    };
-  });
+      result[rawSymbol] = {
+        price: item.d?.[0] ?? null,
+        change: item.d?.[1] ?? null
+      };
+    });
+  }
 
   return result;
 }
@@ -76,64 +80,37 @@ async function fetchGlobal() {
   const json = await response.json();
   const result = {};
 
-  json.data.forEach(item => {
-    const symbol = item.s.split(":")[1];
+  if (Array.isArray(json.data)) {
+    json.data.forEach(item => {
+      const symbol = item.s.split(":")[1];
 
-    result[symbol] = {
-      price: item.d[0],
-      change: item.d[1]
-    };
-  });
+      result[symbol] = {
+        price: item.d?.[0] ?? null,
+        change: item.d?.[1] ?? null
+      };
+    });
+  }
 
   return result;
-}
-
-async function fetchEWZExtended() {
-  try {
-    const response = await fetch("https://query1.finance.yahoo.com/v7/finance/quote?symbols=EWZ", {
-      headers: {
-        "User-Agent": "Mozilla/5.0"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Yahoo HTTP ${response.status}`);
-    }
-
-    const json = await response.json();
-    const q = json?.quoteResponse?.result?.[0];
-
-    if (!q) {
-      return null;
-    }
-
-    return {
-      pre_price: q.preMarketPrice ?? null,
-      pre_change: q.preMarketChangePercent ?? null,
-      post_price: q.postMarketPrice ?? null,
-      post_change: q.postMarketChangePercent ?? null
-    };
-  } catch (error) {
-    console.log("EWZ extended indisponível:", error.message);
-    return null;
-  }
 }
 
 app.get("/api/quotes", async (req, res) => {
   try {
     const br = await fetchBrazil();
     const gl = await fetchGlobal();
-    const ewzExtended = await fetchEWZExtended();
 
     res.json({
       PETR4: br.PETR4 || null,
       VALE3: br.VALE3 || null,
+      IFNC: br.IFNC || null,
+      ICON: br.ICON || null,
+      DI1FUT: null,
       EWZ: {
         ...(gl.EWZ || {}),
-        pre_price: ewzExtended?.pre_price ?? null,
-        pre_change: ewzExtended?.pre_change ?? null,
-        post_price: ewzExtended?.post_price ?? null,
-        post_change: ewzExtended?.post_change ?? null
+        pre_price: null,
+        pre_change: null,
+        post_price: null,
+        post_change: null
       },
       VIX: gl.VIX || null,
       DXY: gl.DXY || null
