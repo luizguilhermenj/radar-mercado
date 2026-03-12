@@ -477,6 +477,10 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .macro-grid {
+    grid-template-columns: 1fr;
+  }
+
   .mini-stats {
     grid-template-columns: 1fr;
   }
@@ -484,4 +488,128 @@ h1 {
   .market-card {
     min-height: auto;
   }
+}
+
+.macro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.macro-card {
+  border-radius: 28px;
+  padding: 22px;
+  min-height: 330px;
+}
+
+.macro-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.macro-head h2 {
+  margin: 6px 0 0;
+  font-size: 28px;
+}
+
+.macro-badge {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d5e1ee;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.macro-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.macro-event {
+  border-radius: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.macro-event-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.macro-event-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.macro-event-time {
+  font-size: 15px;
+  font-weight: 700;
+  color: #dbe4f0;
+}
+
+.macro-event-meta,
+.macro-event-impact,
+.macro-event-bias {
+  color: #d7e3f3;
+  line-height: 1.45;
+  font-size: 14px;
+}
+
+.macro-impact-stars {
+  color: var(--yellow);
+  letter-spacing: 0.08em;
+}
+
+.macro-bias-pos { color: var(--green); }
+.macro-bias-neg { color: var(--red); }
+.macro-bias-neutral { color: #e5e7eb; }
+
+.macro-empty {
+  border-radius: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+}
+
+
+.day-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.day-range > div {
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.day-range strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 18px;
+}
+
+.day-range-full {
+  grid-column: 1 / -1;
+}
+
+.range-reading {
+  line-height: 1.35;
+  font-size: 15px !important;
 }
