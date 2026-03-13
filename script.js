@@ -1,3 +1,43 @@
+async function carregarSessaoDashboard() {
+  try {
+    const response = await fetch('/api/me', { cache: 'no-store' });
+    if (response.status === 401) {
+      window.location.href = '/login';
+      return null;
+    }
+    const user = await response.json();
+
+    const sessionUser = document.getElementById('sessionUser');
+    if (sessionUser) {
+      const plano = user.plan ? ` • ${user.plan}` : '';
+      sessionUser.textContent = `Logado como ${user.username} • ${user.role}${plano}`;
+    }
+
+    const adminLink = document.getElementById('adminLink');
+    if (adminLink && user.role === 'master') {
+      adminLink.classList.remove('hidden');
+      adminLink.style.display = 'inline-flex';
+    }
+
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton && !logoutButton.dataset.bound) {
+      logoutButton.dataset.bound = '1';
+      logoutButton.addEventListener('click', async () => {
+        try {
+          await fetch('/api/logout', { method: 'POST' });
+        } finally {
+          window.location.href = '/login';
+        }
+      });
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Erro ao carregar sessão:', error);
+    return null;
+  }
+}
+
 async function atualizarRadar() {
   try {
     const response = await fetch('/api/quotes', { cache: 'no-store' });
@@ -359,3 +399,6 @@ setInterval(atualizarRadar, 4000);
 setInterval(atualizarEventosMacro, 30000);
 atualizarRadar();
 atualizarEventosMacro();
+
+
+carregarSessaoDashboard();
