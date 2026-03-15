@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin • Trading Cockpit</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <div class="trading-grid"></div>
+  <div class="scan-line"></div>
+
+  <main class="app admin-shell">
+    <header class="topbar admin-topbar">
+      <div class="brand">
+        <div class="brand-badge">◉</div>
+        <div>
+          <p class="eyebrow">TRADING COCKPIT</p>
+          <h1>Admin de usuários</h1>
+        </div>
+      </div>
+      <div class="topbar-side">
+        <div class="session-actions">
+          <a class="session-link" href="/app">Voltar ao radar</a>
+          <button id="logoutButton" class="session-button" type="button">Sair</button>
+        </div>
+        <p id="sessionUser" class="session-user">Carregando usuário...</p>
+      </div>
+    </header>
+
+    <section class="admin-hero glass">
+      <div>
+        <p class="section-label">Controle master</p>
+        <h2 class="admin-hero-title">Cadastro, edição e assinaturas</h2>
+        <p class="admin-top-text">Área pronta para criar usuários, editar acessos, trocar plano e controlar vencimento sem perder a pegada visual do radar.</p>
+      </div>
+      <div class="admin-kpis">
+        <div class="admin-kpi"><span>Total</span><strong id="kpiTotal">--</strong></div>
+        <div class="admin-kpi"><span>Ativos</span><strong id="kpiActive">--</strong></div>
+        <div class="admin-kpi"><span>Expirando</span><strong id="kpiExpiring">--</strong></div>
+      </div>
+    </section>
+
+    <section class="admin-grid admin-grid-3">
+      <article class="admin-panel glass admin-panel-form">
+        <div class="admin-panel-head">
+          <div>
+            <p class="section-label">Novo assinante</p>
+            <h2>Criar usuário</h2>
+          </div>
+          <div class="panel-mark">＋</div>
+        </div>
+
+        <form id="createUserForm" class="admin-form">
+          <div class="form-row">
+            <label class="form-label" for="newUsername">Usuário</label>
+            <input class="form-input" id="newUsername" required />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="newPassword">Senha inicial</label>
+            <input class="form-input" id="newPassword" type="password" required />
+          </div>
+          <div class="form-row two-cols">
+            <div>
+              <label class="form-label" for="newRole">Perfil</label>
+              <select class="form-select" id="newRole">
+                <option value="subscriber">subscriber</option>
+                <option value="master">master</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="newPlan">Plano</label>
+              <select class="form-select" id="newPlan">
+                <option value="monthly">Mensal</option>
+                <option value="quarterly">Trimestral</option>
+                <option value="trial">Trial</option>
+                <option value="lifetime">Vitalício</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="newExpiresAt">Vencimento</label>
+            <input class="form-input" id="newExpiresAt" type="date" />
+          </div>
+          <button class="admin-button" type="submit">Criar usuário</button>
+          <div id="adminStatus" class="admin-status"></div>
+        </form>
+      </article>
+
+      <article class="admin-panel glass admin-panel-form">
+        <div class="admin-panel-head">
+          <div>
+            <p class="section-label">Manutenção</p>
+            <h2>Editar usuário</h2>
+          </div>
+          <div class="panel-mark">✎</div>
+        </div>
+
+        <form id="editUserForm" class="admin-form">
+          <input id="editUserId" type="hidden" />
+          <div class="form-row">
+            <label class="form-label" for="editUsername">Usuário</label>
+            <input class="form-input" id="editUsername" placeholder="Selecione um usuário abaixo" disabled required />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="editPassword">Nova senha</label>
+            <input class="form-input" id="editPassword" type="password" placeholder="Deixe em branco para manter" disabled />
+          </div>
+          <div class="form-row two-cols">
+            <div>
+              <label class="form-label" for="editRole">Perfil</label>
+              <select class="form-select" id="editRole" disabled>
+                <option value="subscriber">subscriber</option>
+                <option value="master">master</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="editPlan">Plano</label>
+              <select class="form-select" id="editPlan" disabled>
+                <option value="monthly">Mensal</option>
+                <option value="quarterly">Trimestral</option>
+                <option value="trial">Trial</option>
+                <option value="lifetime">Vitalício</option>
+                <option value="master">Master</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div>
+              <label class="form-label" for="editExpiresAt">Vencimento</label>
+              <input class="form-input" id="editExpiresAt" type="date" disabled />
+            </div>
+            <div>
+              <label class="form-label" for="editActive">Status</label>
+              <select class="form-select" id="editActive" disabled>
+                <option value="true">Ativo</option>
+                <option value="false">Inativo</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-actions-row">
+            <button class="admin-button" id="saveUserButton" type="submit" disabled>Salvar alterações</button>
+            <button class="admin-link-button" id="clearEditButton" type="button">Limpar</button>
+          </div>
+          <div id="editStatus" class="admin-status"></div>
+        </form>
+      </article>
+
+      <article class="admin-panel glass admin-side-note">
+        <div class="admin-panel-head">
+          <div>
+            <p class="section-label">Fluxo</p>
+            <h2>Controle tático</h2>
+          </div>
+          <div class="panel-mark">◎</div>
+        </div>
+        <ul class="admin-notes">
+          <li>Criar assinantes manualmente</li>
+          <li>Editar login, perfil, plano e vencimento</li>
+          <li>Trocar senha sem mexer no banco</li>
+          <li>Ativar ou bloquear acesso instantaneamente</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="admin-panel glass admin-table-panel">
+      <div class="admin-inline admin-inline-strong">
+        <div>
+          <p class="section-label">Usuários</p>
+          <h2>Acessos cadastrados</h2>
+        </div>
+        <button id="refreshUsers" class="admin-link-button" type="button">Atualizar lista</button>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Perfil</th>
+              <th>Plano</th>
+              <th>Status</th>
+              <th>Vencimento</th>
+              <th>Criado em</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr><td colspan="7">Carregando usuários...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/assets/js/admin.js"></script>
+</body>
+</html>

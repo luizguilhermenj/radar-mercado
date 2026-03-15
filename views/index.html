@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radar de Mercado</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge">◉</div>
+        <div>
+          <p class="eyebrow">TRADING COCKPIT</p>
+          <h1>Radar de Mercado</h1>
+        </div>
+      </div>
+
+      <div class="topbar-side">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="connectionStatus">Conectando mercado</span>
+        </div>
+        <p id="updateTime">Aguardando atualização...</p>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-left glass">
+        <div class="hero-head">
+          <p class="section-label">Leitura rápida</p>
+          <h2 id="marketMoodTitle">Preparando radar</h2>
+        </div>
+
+        <p id="marketMoodText" class="hero-text">
+          Carregando dados dos ativos para montar a leitura do mercado.
+        </p>
+
+        <div class="sentiment-wrap">
+          <div class="sentiment-header">
+            <span>Compradores</span>
+            <span id="sentimentValue">--</span>
+          </div>
+
+          <div class="sentiment-bar">
+            <div id="bullBar" class="sentiment-bull"></div>
+            <div id="bearBar" class="sentiment-bear"></div>
+          </div>
+
+          <div class="sentiment-footer">
+            <span id="bullText">Bull 0%</span>
+            <span id="bearText">Bear 0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right glass">
+        <p class="section-label">Painel tático</p>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <span class="mini-label">Brasil</span>
+            <strong id="brStrength">--</strong>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-label">Global</span>
+            <strong id="globalStrength">--</strong>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-label">Risco</span>
+            <strong id="riskMode">--</strong>
+          </div>
+        </div>
+
+        <div class="pulse-card">
+          <span class="pulse-label">Resumo operacional</span>
+          <h3 id="tradeCall">Lendo contexto...</h3>
+          <p id="tradeSummary">
+            Aguardando preços e variações para gerar o resumo do radar.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cards-grid">
+      <article class="market-card glass positive-theme" id="card-PETR4">
+        <div class="card-top">
+          <div>
+            <p class="ticker-label">Brasil</p>
+            <h3>PETR4</h3>
+          </div>
+          <span class="card-badge">PETRO</span>
+        </div>
+        <div class="ring ring-cyan"><div class="ring-inner"><span class="price-label">Preço</span><strong id="petr4_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="petr4_change">--</strong></div>
+          <div><p class="bottom-label">Direção</p><strong id="petr4_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="petr4_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="petr4_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="petr4_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass positive-theme" id="card-VALE3">
+        <div class="card-top">
+          <div><p class="ticker-label">Brasil</p><h3>VALE3</h3></div>
+          <span class="card-badge">VALE</span>
+        </div>
+        <div class="ring ring-purple"><div class="ring-inner"><span class="price-label">Preço</span><strong id="vale3_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="vale3_change">--</strong></div>
+          <div><p class="bottom-label">Direção</p><strong id="vale3_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="vale3_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="vale3_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="vale3_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass positive-theme" id="card-IFNC">
+        <div class="card-top">
+          <div><p class="ticker-label">Financeiro</p><h3>IFNC</h3></div>
+          <span class="card-badge">SETOR</span>
+        </div>
+        <div class="ring ring-cyan"><div class="ring-inner"><span class="price-label">Preço</span><strong id="ifnc_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="ifnc_change">--</strong></div>
+          <div><p class="bottom-label">Leitura</p><strong id="ifnc_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="ifnc_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="ifnc_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="ifnc_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass neutral-theme" id="card-ICON">
+        <div class="card-top">
+          <div><p class="ticker-label">Consumo</p><h3>ICON</h3></div>
+          <span class="card-badge">SETOR</span>
+        </div>
+        <div class="ring ring-blue"><div class="ring-inner"><span class="price-label">Preço</span><strong id="icon_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="icon_change">--</strong></div>
+          <div><p class="bottom-label">Leitura</p><strong id="icon_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="icon_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="icon_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="icon_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass risk-theme" id="card-DI">
+        <div class="card-top">
+          <div><p class="ticker-label">Juros</p><h3>DI1FUT</h3></div>
+          <span class="card-badge">DI</span>
+        </div>
+        <div class="ring ring-orange"><div class="ring-inner"><span class="price-label">Taxa</span><strong id="di_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="di_change">--</strong></div>
+          <div><p class="bottom-label">Impacto</p><strong id="di_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="di_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="di_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="di_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass neutral-theme" id="card-EWZ">
+        <div class="card-top">
+          <div><p class="ticker-label">ETF Brasil</p><h3>EWZ</h3></div>
+          <span class="card-badge">NYSE</span>
+        </div>
+        <div class="ring ring-blue"><div class="ring-inner"><span class="price-label">Preço</span><strong id="ewz_price">--</strong></div></div>
+        <div class="card-bottom ewz-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="ewz_change">--</strong></div>
+          <div><p class="bottom-label">Pré / After</p><strong id="ewz_after">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="ewz_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="ewz_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="ewz_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass risk-theme" id="card-VIX">
+        <div class="card-top">
+          <div><p class="ticker-label">Volatilidade</p><h3>VIX</h3></div>
+          <span class="card-badge">RISK</span>
+        </div>
+        <div class="ring ring-orange"><div class="ring-inner"><span class="price-label">Preço</span><strong id="vix_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="vix_change">--</strong></div>
+          <div><p class="bottom-label">Leitura</p><strong id="vix_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="vix_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="vix_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="vix_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+
+      <article class="market-card glass dollar-theme" id="card-DXY">
+        <div class="card-top">
+          <div><p class="ticker-label">Dólar Index</p><h3>DXY</h3></div>
+          <span class="card-badge">USD</span>
+        </div>
+        <div class="ring ring-pink"><div class="ring-inner"><span class="price-label">Preço</span><strong id="dxy_price">--</strong></div></div>
+        <div class="card-bottom">
+          <div><p class="bottom-label">Variação</p><strong id="dxy_change">--</strong></div>
+          <div><p class="bottom-label">Leitura</p><strong id="dxy_direction">--</strong></div>
+        </div>
+        <div class="day-range">
+          <div><p class="bottom-label">Mínima %</p><strong id="dxy_low">--</strong></div>
+          <div><p class="bottom-label">Máxima %</p><strong id="dxy_high">--</strong></div>
+          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="dxy_range" class="range-reading neutral">Aguardando...</strong></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="macro-grid">
+      <article class="macro-card glass">
+        <div class="macro-head">
+          <div>
+            <p class="section-label">Calendário econômico</p>
+            <h2>Próximos eventos</h2>
+          </div>
+          <span class="macro-badge">Impacto 2⭐+</span>
+        </div>
+        <div id="macroUpcoming" class="macro-list">
+          <div class="macro-empty">Carregando próximos eventos...</div>
+        </div>
+      </article>
+
+      <article class="macro-card glass">
+        <div class="macro-head">
+          <div>
+            <p class="section-label">Dados já divulgados</p>
+            <h2>Eventos do dia</h2>
+          </div>
+          <span class="macro-badge">Leitura macro</span>
+        </div>
+        <div id="macroReleased" class="macro-list">
+          <div class="macro-empty">Carregando eventos divulgados...</div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="/assets/js/dashboard.js"></script>
+</body>
+</html>
