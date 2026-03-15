@@ -3,88 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login • Trading Cockpit</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
+  <title>Radar de Mercado • Landing</title>
+  <link rel="stylesheet" href="/assets/css/login.css" />
 </head>
 <body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-orb orb-3"></div>
-  <div class="trading-grid"></div>
-  <div class="scan-line"></div>
+  <div class="landing-shell">
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="ambient ambient-c"></div>
 
-  <main class="auth-shell auth-shell-split">
-    <section class="auth-showcase glass">
-      <div class="showcase-chip">PRIVATE ACCESS</div>
-      <div>
-        <p class="eyebrow">TRADING COCKPIT</p>
-        <h1 class="showcase-title">Acesse a cabine tática do radar.</h1>
-        <p class="showcase-text">
-          Visual agressivo, leitura rápida e controle total do ambiente. O login entra no mesmo clima do painel:
-          mais pressão, mais presença e cara de mesa operacional.
+    <header class="topbar">
+      <div class="brand-mark">
+        <span class="brand-icon">◉</span>
+        <div>
+          <p class="brand-kicker">Trading cockpit</p>
+          <strong>Radar de Mercado</strong>
+        </div>
+      </div>
+
+      <nav class="top-actions">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#demo">Demo</a>
+        <a href="#entrar" class="top-action-primary">Entrar</a>
+      </nav>
+    </header>
+
+    <main class="hero-grid">
+      <section class="hero-copy">
+        <span class="hero-badge">Leitura institucional em tempo real</span>
+        <h1 id="heroTitle">Potencialize sua leitura do mercado em tempo real</h1>
+        <p id="heroText">
+          Combine fluxo, macro, força setorial e pressão do índice em uma leitura visual pensada para acelerar sua tomada de decisão.
         </p>
 
-        <div class="showcase-metrics">
-          <article class="showcase-metric">
-            <span class="metric-kicker">Ambiente</span>
-            <strong>Secure Mode</strong>
-            <p>Camada privada para acesso ao dashboard e à área de administração.</p>
+        <div class="hero-actions">
+          <button type="button" class="cta-primary" id="demoJump">Ver demonstração</button>
+          <a href="#entrar" class="cta-secondary">Acessar radar</a>
+        </div>
+
+        <div class="feature-strip">
+          <article>
+            <span>Radar institucional</span>
+            <strong>Fluxo, macro e direção do índice</strong>
           </article>
-          <article class="showcase-metric">
-            <span class="metric-kicker">Operação</span>
-            <strong>Master Control</strong>
-            <p>O usuário master libera e gerencia os assinantes manualmente.</p>
+          <article>
+            <span>Painel tático</span>
+            <strong>Leitura visual clara e objetiva</strong>
+          </article>
+          <article>
+            <span>Tempo real</span>
+            <strong>Pronto para link da bio e venda</strong>
           </article>
         </div>
-      </div>
+      </section>
 
-      <div class="showcase-ticker">
-        <span>Sinal</span>
-        <span>Disciplina</span>
-        <span>Controle</span>
-        <span>Velocidade</span>
-      </div>
-    </section>
+      <section class="hero-stage" id="demo">
+        <div class="slide-stack" id="slideStack" aria-label="Demonstração visual do radar">
+          <article class="stage-slide active" data-index="0" style="--bg:url('/assets/images/slide_1.png');">
+            <div class="stage-overlay"></div>
+          </article>
+          <article class="stage-slide" data-index="1" style="--bg:url('/assets/images/slide_2.png');">
+            <div class="stage-overlay"></div>
+          </article>
+          <article class="stage-slide" data-index="2" style="--bg:url('/assets/images/slide_3.png');">
+            <div class="stage-overlay"></div>
+          </article>
+          <article class="stage-slide" data-index="3" style="--bg:url('/assets/images/slide_4.png');">
+            <div class="stage-overlay"></div>
+          </article>
+          <article class="stage-slide" data-index="4" style="--bg:url('/assets/images/slide_5.png');">
+            <div class="stage-overlay"></div>
+          </article>
+          <article class="stage-slide" data-index="5" style="--bg:url('/assets/images/slide_6.png');">
+            <div class="stage-overlay"></div>
+          </article>
 
-    <section class="auth-card glass auth-card-intense">
-      <div class="auth-card-top">
-        <div>
-          <p class="eyebrow">LOGIN RESTRITO</p>
-          <h2 class="auth-title">Entrar no radar</h2>
-        </div>
-        <div class="auth-radar-badge">◉</div>
-      </div>
+          <div class="stage-chrome">
+            <div class="chrome-top">
+              <span class="chrome-pill">Demo visual</span>
+              <span class="chrome-pill ghost" id="sceneCounter">01 / 06</span>
+            </div>
 
-      <p class="auth-text">
-        Acesso privado ao painel. Entre com suas credenciais para liberar o cockpit operacional.
-      </p>
+            <div class="stage-float-card card-main">
+              <p class="float-kicker">Leitura rápida</p>
+              <strong id="sceneHeadline">Potencialize sua leitura do mercado</strong>
+              <p id="sceneDescription">A demonstração alterna visões fictícias do radar para despertar curiosidade comercial.</p>
+            </div>
 
-      <form id="loginForm" class="auth-form">
-        <div class="form-row form-row-glow">
-          <label class="form-label" for="username">Usuário</label>
-          <input class="form-input" id="username" name="username" autocomplete="username" placeholder="Seu usuário" required />
-        </div>
-        <div class="form-row form-row-glow">
-          <label class="form-label" for="password">Senha</label>
-          <input class="form-input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
-        </div>
+            <div class="stage-float-card card-metric card-left">
+              <p class="float-kicker">Bull / Bear</p>
+              <strong id="sceneMetric">72% / 28%</strong>
+            </div>
 
-        <div class="auth-actions-row">
-          <button class="auth-button" type="submit">Entrar agora</button>
-          <div class="auth-mini-info">
-            <span class="auth-mini-dot"></span>
-            <span>Painel protegido</span>
+            <div class="stage-float-card card-metric card-right">
+              <p class="float-kicker">Painel tático</p>
+              <strong id="sceneMode">Fluxo comprador</strong>
+            </div>
+
+            <div class="stage-dots" id="stageDots" aria-label="Trocar cena">
+              <button type="button" class="active" data-slide="0"></button>
+              <button type="button" data-slide="1"></button>
+              <button type="button" data-slide="2"></button>
+              <button type="button" data-slide="3"></button>
+              <button type="button" data-slide="4"></button>
+              <button type="button" data-slide="5"></button>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div id="loginStatus" class="auth-status"></div>
-      </form>
+      <aside class="login-card" id="entrar">
+        <div class="login-head">
+          <div>
+            <p class="login-kicker">Login restrito</p>
+            <h2>Entrar no radar</h2>
+          </div>
+          <span class="login-signal"></span>
+        </div>
 
-      <div class="auth-footer-note">
-        <p class="auth-hint">Ambiente privado. Em produção, mantenha o usuário master e a senha fora da interface.</p>
-      </div>
+        <p class="login-text">
+          Entre com suas credenciais para acessar o painel operacional e a área administrativa do radar.
+        </p>
+
+        <form id="loginForm" class="login-form">
+          <label>
+            <span>Usuário</span>
+            <input id="username" name="username" autocomplete="username" placeholder="Seu usuário" required />
+          </label>
+
+          <label>
+            <span>Senha</span>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
+          </label>
+
+          <button type="submit" class="cta-primary full">Entrar agora</button>
+          <div id="loginStatus" class="auth-status"></div>
+        </form>
+
+        <div class="login-mini-grid">
+          <article>
+            <span>Macro global</span>
+            <strong>DXY + VIX + EWZ</strong>
+          </article>
+          <article>
+            <span>Fluxo Brasil</span>
+            <strong>PETR4 + VALE3 + setores</strong>
+          </article>
+          <article>
+            <span>Direção índice</span>
+            <strong>Bull vs Bear fictício</strong>
+          </article>
+          <article>
+            <span>Checkout</span>
+            <strong>Pronto para futura integração</strong>
+          </article>
+        </div>
+      </aside>
+    </main>
+
+    <section class="info-band" id="como-funciona">
+      <article>
+        <span>Macro global</span>
+        <strong>DXY, VIX e contexto externo</strong>
+        <p>Uma leitura rápida da pressão global que impacta o índice.</p>
+      </article>
+      <article>
+        <span>Fluxo institucional</span>
+        <strong>Brasil, setores e ativos dominantes</strong>
+        <p>PETR4, VALE3, IFNC, ICON e outros blocos em leitura tática.</p>
+      </article>
+      <article>
+        <span>Painel tático</span>
+        <strong>Direção visual do mercado</strong>
+        <p>Resumo operacional pensado para reduzir ruído e acelerar a decisão.</p>
+      </article>
     </section>
-  </main>
+  </div>
 
   <script type="module" src="/assets/js/login.js"></script>
 </body>

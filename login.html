@@ -3,89 +3,145 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login • Trading Cockpit</title>
-  <link rel="stylesheet" href="/style.css" />
+  <title>Radar de Mercado • Demo Tática</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/landing.css" />
 </head>
 <body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-orb orb-3"></div>
-  <div class="trading-grid"></div>
-  <div class="scan-line"></div>
+  <div class="landing-bg"></div>
+  <div class="landing-grid"></div>
 
-  <main class="auth-shell auth-shell-split">
-    <section class="auth-showcase glass">
-      <div class="showcase-chip">PRIVATE ACCESS</div>
-      <div>
-        <p class="eyebrow">TRADING COCKPIT</p>
-        <h1 class="showcase-title">Acesse a cabine tática do radar.</h1>
-        <p class="showcase-text">
-          Visual agressivo, leitura rápida e controle total do ambiente. O login entra no mesmo clima do painel:
-          mais pressão, mais presença e cara de mesa operacional.
-        </p>
+  <main class="landing-shell">
+    <section class="landing-board">
+      <div class="landing-main-panel panel-frame">
+        <div class="hero-intro">
+          <div class="hero-copy-block">
+            <p class="mini-kicker">Radar de Mercado</p>
+            <h1>Veja o radar alinhar os ativos e puxar o <span>WINFUT</span>.</h1>
+            <div class="hero-copy">
+              <p>
+                O radar cruza <strong>PETR4, VALE3, ICON, IFNC, Juros, EWZ, VIX e DXY</strong> para antecipar pressão compradora ou vendedora.
+                Quando o cenário fecha, o mini índice responde.
+              </p>
+            </div>
+          </div>
 
-        <div class="showcase-metrics">
-          <article class="showcase-metric">
-            <span class="metric-kicker">Ambiente</span>
-            <strong>Secure Mode</strong>
-            <p>Camada privada para acesso ao dashboard e à área de administração.</p>
-          </article>
-          <article class="showcase-metric">
-            <span class="metric-kicker">Operação</span>
-            <strong>Master Control</strong>
-            <p>O usuário master libera e gerencia os assinantes manualmente.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="showcase-ticker">
-        <span>Sinal</span>
-        <span>Disciplina</span>
-        <span>Controle</span>
-        <span>Velocidade</span>
-      </div>
-    </section>
-
-    <section class="auth-card glass auth-card-intense">
-      <div class="auth-card-top">
-        <div>
-          <p class="eyebrow">LOGIN RESTRITO</p>
-          <h2 class="auth-title">Entrar no radar</h2>
-        </div>
-        <div class="auth-radar-badge">◉</div>
-      </div>
-
-      <p class="auth-text">
-        Acesso privado ao painel. Entre com suas credenciais para liberar o cockpit operacional.
-      </p>
-
-      <form id="loginForm" class="auth-form">
-        <div class="form-row form-row-glow">
-          <label class="form-label" for="username">Usuário</label>
-          <input class="form-input" id="username" name="username" autocomplete="username" placeholder="Seu usuário" required />
-        </div>
-        <div class="form-row form-row-glow">
-          <label class="form-label" for="password">Senha</label>
-          <input class="form-input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
-        </div>
-
-        <div class="auth-actions-row">
-          <button class="auth-button" type="submit">Entrar agora</button>
-          <div class="auth-mini-info">
-            <span class="auth-mini-dot"></span>
-            <span>Painel protegido</span>
+          <div class="hero-side">
+            <div class="demo-badge">Demo fictícia</div>
+            <div class="hero-side-note">
+              Observe os cards se alinhando e o WIN reagindo logo abaixo, sem precisar rolar a página.
+            </div>
           </div>
         </div>
 
-        <div id="loginStatus" class="auth-status"></div>
-      </form>
+        <div class="assets-stage" id="assetGrid"></div>
+      </div>
 
-      <div class="auth-footer-note">
-        <p class="auth-hint">Ambiente privado. Em produção, mantenha o usuário master e a senha fora da interface.</p>
+      <div class="landing-chart-panel panel-frame">
+        <div class="chart-head">
+          <div>
+            <p class="mini-kicker">Simulação do índice</p>
+            <h2>WIN reagindo ao cenário combinado</h2>
+          </div>
+          <div class="trend-chip" id="trendChip">Mercado em observação</div>
+        </div>
+
+        <div class="chart-meta-row">
+          <div class="chart-meta-box">
+            <span>Direção provável</span>
+            <strong id="chartDirection">Neutra</strong>
+          </div>
+          <div class="chart-meta-box">
+            <span>Convicção</span>
+            <strong id="chartConviction">54%</strong>
+          </div>
+          <div class="chart-meta-box">
+            <span>Leitura</span>
+            <strong id="chartRead">Mista</strong>
+          </div>
+        </div>
+
+        <div class="chart-stage">
+          <canvas id="winChart" width="1200" height="420" aria-label="Gráfico do WINFUT"></canvas>
+          <div class="chart-overlay">
+            <div class="chart-price" id="chartPrice">126.430</div>
+            <div class="chart-sub">Movimento demonstrativo baseado no alinhamento dos cards acima</div>
+          </div>
+        </div>
       </div>
     </section>
+
+    <aside class="landing-sidebar">
+      <section class="sidebar-card panel-frame sidebar-summary">
+        <p class="mini-kicker">Ativos globais + ADR</p>
+        <h3>Contexto externo do radar</h3>
+        <div class="sidebar-list" id="globalSummary"></div>
+      </section>
+
+      <section class="sidebar-card panel-frame sidebar-summary">
+        <p class="mini-kicker">Brasil + curva de juros</p>
+        <h3>Pressão doméstica</h3>
+        <div class="sidebar-list" id="brSummary"></div>
+      </section>
+
+      <section class="sidebar-card panel-frame login-box">
+        <div class="login-head">
+          <div>
+            <p class="mini-kicker">Acesso</p>
+            <h3>Entrar no radar</h3>
+          </div>
+          <div class="login-glow"></div>
+        </div>
+
+        <form id="loginForm" class="landing-login-form">
+          <label class="landing-label" for="username">Usuário</label>
+          <input class="landing-input" id="username" name="username" autocomplete="username" placeholder="Seu usuário" required />
+
+          <label class="landing-label" for="password">Senha</label>
+          <input class="landing-input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
+
+          <button class="landing-login-button" type="submit">Acessar painel</button>
+          <div id="loginStatus" class="landing-status"></div>
+        </form>
+      </section>
+
+      <section class="sidebar-card panel-frame reading-box">
+        <p class="mini-kicker">Leitura combinada</p>
+        <h3 id="scenarioTitle">Fluxo em montagem</h3>
+        <p id="scenarioText" class="reading-text">
+          O radar começa neutro, busca alinhamento entre os ativos e só então acelera a leitura do índice.
+        </p>
+        <div class="reading-pills" id="readingPills"></div>
+      </section>
+
+      <section class="sidebar-card panel-frame conditions-box">
+        <p class="mini-kicker">Condição do cenário</p>
+        <h3>Hoje o radar mostraria</h3>
+        <div class="condition-grid">
+          <article>
+            <span>Fluxo</span>
+            <strong id="conditionFlow">Misto</strong>
+          </article>
+          <article>
+            <span>Direção</span>
+            <strong id="conditionDirection">Observação</strong>
+          </article>
+          <article>
+            <span>Motor</span>
+            <strong id="conditionDrivers">Ativos divergentes</strong>
+          </article>
+          <article>
+            <span>Convicção</span>
+            <strong id="conditionConviction">54%</strong>
+          </article>
+        </div>
+      </section>
+    </aside>
   </main>
 
+  <script src="/landing.js"></script>
   <script src="/auth.js"></script>
 </body>
 </html>
