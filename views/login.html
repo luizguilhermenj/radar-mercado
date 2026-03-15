@@ -3,183 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Radar de Mercado • Landing</title>
-  <link rel="stylesheet" href="/assets/css/login.css" />
+  <title>Radar de Mercado</title>
+  <link rel="stylesheet" href="/css/radar.css" />
 </head>
 <body>
-  <div class="landing-shell">
-    <div class="ambient ambient-a"></div>
-    <div class="ambient ambient-b"></div>
-    <div class="ambient ambient-c"></div>
-
+  <div class="page-shell">
     <header class="topbar">
-      <div class="brand-mark">
-        <span class="brand-icon">◉</span>
+      <div class="brand">
+        <div class="brand-mark"></div>
         <div>
-          <p class="brand-kicker">Trading cockpit</p>
-          <strong>Radar de Mercado</strong>
+          <strong>RADAR DE MERCADO</strong>
+          <span>Simulação visual institucional</span>
         </div>
       </div>
-
-      <nav class="top-actions">
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#demo">Demo</a>
-        <a href="#entrar" class="top-action-primary">Entrar</a>
+      <nav>
+        <a href="#">Como funciona</a>
+        <a href="#">Demonstração</a>
+        <a href="#">Entrar</a>
       </nav>
     </header>
 
-    <main class="hero-grid">
-      <section class="hero-copy">
-        <span class="hero-badge">Leitura institucional em tempo real</span>
-        <h1 id="heroTitle">Potencialize sua leitura do mercado em tempo real</h1>
-        <p id="heroText">
-          Combine fluxo, macro, força setorial e pressão do índice em uma leitura visual pensada para acelerar sua tomada de decisão.
-        </p>
-
-        <div class="hero-actions">
-          <button type="button" class="cta-primary" id="demoJump">Ver demonstração</button>
-          <a href="#entrar" class="cta-secondary">Acessar radar</a>
+    <main class="layout">
+      <section class="left-panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Leitura visual do mini índice</p>
+          <h1>Veja os ativos alinharem e o <span>WINFUT</span> responder ao cenário.</h1>
+          <p class="hero-text">
+            PETR4, VALE3, ICON, IFNC, Juros, EWZ, VIX e DXY se ajustam em tempo real
+            dentro da demo visual para mostrar como o radar traduz contexto em direção.
+          </p>
         </div>
 
-        <div class="feature-strip">
-          <article>
-            <span>Radar institucional</span>
-            <strong>Fluxo, macro e direção do índice</strong>
-          </article>
-          <article>
-            <span>Painel tático</span>
-            <strong>Leitura visual clara e objetiva</strong>
-          </article>
-          <article>
-            <span>Tempo real</span>
-            <strong>Pronto para link da bio e venda</strong>
-          </article>
-        </div>
+        <section class="cards-grid" id="cards"></section>
+
+        <section class="chart-card">
+          <div class="chart-head">
+            <div>
+              <p class="chart-label">WINFUT</p>
+              <h2>Reação do índice ao score combinado</h2>
+            </div>
+            <div class="chart-badge" id="scenarioBadge">Cenário comprador</div>
+          </div>
+          <canvas id="chart" width="980" height="320"></canvas>
+        </section>
       </section>
 
-      <section class="hero-stage" id="demo">
-        <div class="slide-stack" id="slideStack" aria-label="Demonstração visual do radar">
-          <article class="stage-slide active" data-index="0" style="--bg:url('/assets/images/slide_1.png');">
-            <div class="stage-overlay"></div>
-          </article>
-          <article class="stage-slide" data-index="1" style="--bg:url('/assets/images/slide_2.png');">
-            <div class="stage-overlay"></div>
-          </article>
-          <article class="stage-slide" data-index="2" style="--bg:url('/assets/images/slide_3.png');">
-            <div class="stage-overlay"></div>
-          </article>
-          <article class="stage-slide" data-index="3" style="--bg:url('/assets/images/slide_4.png');">
-            <div class="stage-overlay"></div>
-          </article>
-          <article class="stage-slide" data-index="4" style="--bg:url('/assets/images/slide_5.png');">
-            <div class="stage-overlay"></div>
-          </article>
-          <article class="stage-slide" data-index="5" style="--bg:url('/assets/images/slide_6.png');">
-            <div class="stage-overlay"></div>
-          </article>
-
-          <div class="stage-chrome">
-            <div class="chrome-top">
-              <span class="chrome-pill">Demo visual</span>
-              <span class="chrome-pill ghost" id="sceneCounter">01 / 06</span>
-            </div>
-
-            <div class="stage-float-card card-main">
-              <p class="float-kicker">Leitura rápida</p>
-              <strong id="sceneHeadline">Potencialize sua leitura do mercado</strong>
-              <p id="sceneDescription">A demonstração alterna visões fictícias do radar para despertar curiosidade comercial.</p>
-            </div>
-
-            <div class="stage-float-card card-metric card-left">
-              <p class="float-kicker">Bull / Bear</p>
-              <strong id="sceneMetric">72% / 28%</strong>
-            </div>
-
-            <div class="stage-float-card card-metric card-right">
-              <p class="float-kicker">Painel tático</p>
-              <strong id="sceneMode">Fluxo comprador</strong>
-            </div>
-
-            <div class="stage-dots" id="stageDots" aria-label="Trocar cena">
-              <button type="button" class="active" data-slide="0"></button>
-              <button type="button" data-slide="1"></button>
-              <button type="button" data-slide="2"></button>
-              <button type="button" data-slide="3"></button>
-              <button type="button" data-slide="4"></button>
-              <button type="button" data-slide="5"></button>
-            </div>
+      <aside class="right-panel">
+        <section class="score-card">
+          <div class="score-head">
+            <p>Radar Score</p>
+            <span class="score-pill" id="scorePill">BULL</span>
           </div>
-        </div>
-      </section>
-
-      <aside class="login-card" id="entrar">
-        <div class="login-head">
-          <div>
-            <p class="login-kicker">Login restrito</p>
-            <h2>Entrar no radar</h2>
+          <div class="score-value" id="scoreValue">72</div>
+          <p class="score-label" id="scoreLabel">Fluxo comprador dominante</p>
+          <div class="score-bar">
+            <div class="score-fill" id="scoreFill"></div>
           </div>
-          <span class="login-signal"></span>
-        </div>
+        </section>
 
-        <p class="login-text">
-          Entre com suas credenciais para acessar o painel operacional e a área administrativa do radar.
-        </p>
+        <section class="context-card">
+          <h3>Leitura combinada</h3>
+          <ul>
+            <li><span>Macro global</span><strong id="macroText">VIX e DXY aliviam pressão</strong></li>
+            <li><span>Fluxo Brasil</span><strong id="flowText">PETR4 e VALE3 sustentam avanço</strong></li>
+            <li><span>Viés índice</span><strong id="biasText">Probabilidade compradora</strong></li>
+          </ul>
+        </section>
 
-        <form id="loginForm" class="login-form">
-          <label>
-            <span>Usuário</span>
-            <input id="username" name="username" autocomplete="username" placeholder="Seu usuário" required />
-          </label>
-
-          <label>
-            <span>Senha</span>
-            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
-          </label>
-
-          <button type="submit" class="cta-primary full">Entrar agora</button>
-          <div id="loginStatus" class="auth-status"></div>
-        </form>
-
-        <div class="login-mini-grid">
-          <article>
-            <span>Macro global</span>
-            <strong>DXY + VIX + EWZ</strong>
-          </article>
-          <article>
-            <span>Fluxo Brasil</span>
-            <strong>PETR4 + VALE3 + setores</strong>
-          </article>
-          <article>
-            <span>Direção índice</span>
-            <strong>Bull vs Bear fictício</strong>
-          </article>
-          <article>
-            <span>Checkout</span>
-            <strong>Pronto para futura integração</strong>
-          </article>
-        </div>
+        <section class="login-card">
+          <h3>Entrar no radar</h3>
+          <p>Acesse seu painel e acompanhe a pressão do mercado.</p>
+          <input type="text" placeholder="Usuário" />
+          <input type="password" placeholder="Senha" />
+          <button type="button">Acessar painel</button>
+        </section>
       </aside>
     </main>
-
-    <section class="info-band" id="como-funciona">
-      <article>
-        <span>Macro global</span>
-        <strong>DXY, VIX e contexto externo</strong>
-        <p>Uma leitura rápida da pressão global que impacta o índice.</p>
-      </article>
-      <article>
-        <span>Fluxo institucional</span>
-        <strong>Brasil, setores e ativos dominantes</strong>
-        <p>PETR4, VALE3, IFNC, ICON e outros blocos em leitura tática.</p>
-      </article>
-      <article>
-        <span>Painel tático</span>
-        <strong>Direção visual do mercado</strong>
-        <p>Resumo operacional pensado para reduzir ruído e acelerar a decisão.</p>
-      </article>
-    </section>
   </div>
 
-  <script type="module" src="/assets/js/login.js"></script>
+  <script src="/js/radar.js"></script>
 </body>
 </html>
