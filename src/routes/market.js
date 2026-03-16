@@ -18,4 +18,14 @@ router.get('/quotes', requireAuth, async (req, res) => {
   }
 });
 
+router.get('/market', requireAuth, async (req, res) => {
+  try {
+    const snapshot = await getMarketSnapshot();
+    res.json(snapshot);
+  } catch (error) {
+    console.error('Erro em /api/market:', error.message);
+    res.status(500).json({ error: 'Falha ao consultar mercado.' });
+  }
+});
+
 module.exports = router;

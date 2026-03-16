@@ -4,259 +4,837 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Radar de Mercado</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    :root {
+      --bg-1: #07111f;
+      --bg-2: #0b1730;
+      --panel: rgba(13, 26, 52, 0.72);
+      --panel-strong: rgba(10, 20, 42, 0.9);
+      --line: rgba(111, 164, 255, 0.14);
+      --line-strong: rgba(111, 164, 255, 0.24);
+      --text: #eef4ff;
+      --muted: #93a8c7;
+      --muted-2: #6f86ab;
+      --cyan: #57c7ff;
+      --cyan-2: #5ba8ff;
+      --purple: #8b6dff;
+      --yellow: #ffc85a;
+      --green: #2ee59d;
+      --red: #ff6b7d;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+      --container: 1380px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(78, 187, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(125, 87, 255, 0.14), transparent 28%),
+        linear-gradient(135deg, var(--bg-1), #071425 38%, var(--bg-2));
+    }
+
+    body {
+      padding: 8px 14px;
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: var(--container);
+      margin: 0 auto;
+      height: calc(100vh - 16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px 12px;
+      flex: 0 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .brand-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #66d4ff, #8b6dff);
+      box-shadow: 0 0 20px rgba(91, 168, 255, 0.6);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #cfe0ff;
+      font-size: 14px;
+    }
+
+    .nav a {
+      opacity: 0.9;
+      transition: 0.2s ease;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      color: #fff;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.95fr) minmax(280px, 300px);
+      gap: 16px;
+      align-items: start;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .hero-left {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .eyebrow {
+      color: #55c3ff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      margin: 4px 0 8px;
+    }
+
+    .headline {
+      font-size: clamp(34px, 4.2vw, 56px);
+      line-height: 1.02;
+      font-weight: 800;
+      margin: 0 0 10px;
+      max-width: 860px;
+    }
+
+    .headline-accent {
+      color: var(--cyan);
+      text-shadow: 0 0 24px rgba(87, 199, 255, 0.18);
+    }
+
+    .hero-text {
+      margin: 0 0 14px;
+      color: #b2c4e0;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 920px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .asset-card,
+    .panel,
+    .chart-card,
+    .login-card {
+      background: linear-gradient(180deg, rgba(13, 26, 52, 0.88), rgba(10, 19, 39, 0.94));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .asset-card {
+      border-radius: 18px;
+      padding: 14px 16px 12px;
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .asset-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+    }
+
+    .asset-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .asset-symbol {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .asset-bias {
+      color: #85b7ff;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .asset-price {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-top: 6px;
+    }
+
+    .asset-change {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .asset-change.up {
+      color: var(--green);
+    }
+
+    .asset-change.down {
+      color: var(--red);
+    }
+
+    .asset-change.flat {
+      color: var(--yellow);
+    }
+
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .panel,
+    .login-card {
+      border-radius: 20px;
+      padding: 16px 16px 18px;
+    }
+
+    .panel-label {
+      font-size: 12px;
+      color: #84aef1;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      margin-bottom: 12px;
+    }
+
+    .score-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+.pill {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: #ffd15e;
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease;
+}
+
+.pill.is-bull {
+  color: #20f0a8;
+  border-color: rgba(32, 240, 168, 0.22);
+  background: rgba(32, 240, 168, 0.06);
+  box-shadow: 0 0 14px rgba(32, 240, 168, 0.10);
+}
+
+.pill.is-neutral {
+  color: #f7c85d;
+  border-color: rgba(247, 200, 93, 0.22);
+  background: rgba(247, 200, 93, 0.06);
+  box-shadow: 0 0 14px rgba(247, 200, 93, 0.10);
+}
+
+.pill.is-bear {
+  color: #ff6b82;
+  border-color: rgba(255, 107, 130, 0.22);
+  background: rgba(255, 107, 130, 0.06);
+  box-shadow: 0 0 14px rgba(255, 107, 130, 0.10);
+}
+
+    .score-value {
+  font-size: 60px;
+  line-height: 0.95;
+  font-weight: 800;
+  color: var(--yellow);
+  margin: 8px 0 4px;
+  transition: color 0.35s ease, text-shadow 0.35s ease;
+}
+
+.score-value.is-bull {
+  color: #20f0a8;
+  text-shadow: 0 0 18px rgba(32, 240, 168, 0.18);
+}
+
+.score-value.is-neutral {
+  color: #f7c85d;
+  text-shadow: 0 0 18px rgba(247, 200, 93, 0.16);
+}
+
+.score-value.is-bear {
+  color: #ff6b82;
+  text-shadow: 0 0 18px rgba(255, 107, 130, 0.18);
+}
+
+    .score-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: #fff;
+      margin: 0 0 14px;
+    }
+
+    .score-bar {
+      position: relative;
+      width: 100%;
+      height: 11px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .score-bar-fill {
+  height: 100%;
+  width: 54%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #58c7ff 0%, #ffd15f 100%);
+  transition:
+    width 0.8s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.score-bar-fill.is-bull {
+  background: linear-gradient(90deg, rgba(88,199,255,0.55) 0%, #20f0a8 100%);
+  box-shadow: 0 0 14px rgba(32, 240, 168, 0.18);
+}
+
+.score-bar-fill.is-neutral {
+  background: linear-gradient(90deg, rgba(88,199,255,0.55) 0%, #f7c85d 100%);
+  box-shadow: 0 0 14px rgba(247, 200, 93, 0.16);
+}
+
+.score-bar-fill.is-bear {
+  background: linear-gradient(90deg, rgba(88,199,255,0.40) 0%, #ff6b82 100%);
+  box-shadow: 0 0 14px rgba(255, 107, 130, 0.18);
+}
+
+    .combined-lines {
+      display: grid;
+      gap: 12px;
+    }
+
+    .combined-item-title {
+      color: #6db8ff;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .combined-item-text {
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .chart-card {
+      margin-top: 8px;
+      border-radius: 20px;
+      padding: 14px 14px 12px;
+      overflow: hidden;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .chart-mini-label {
+      color: #7ab7ff;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .chart-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 245px;
+      border-radius: 20px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+        linear-gradient(180deg, rgba(36,61,104,0.34), rgba(9,18,38,0.65));
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .chart-wrap::before,
+    .chart-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .chart-wrap::before {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 100% calc(100% / 5), calc(100% / 9) 100%;
+      opacity: 0.45;
+    }
+
+    .chart-wrap::after {
+      background: linear-gradient(180deg, rgba(255, 208, 94, 0.12), transparent 32%);
+      opacity: 0.8;
+    }
+
+    #demoChart {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .login-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .login-card p {
+      margin: 0 0 14px;
+      color: #a8bddb;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field input {
+      width: 100%;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(3, 10, 22, 0.65);
+      border: 1px solid rgba(111, 164, 255, 0.12);
+      color: var(--text);
+      padding: 0 16px;
+      outline: none;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus {
+      border-color: rgba(97, 177, 255, 0.44);
+      box-shadow: 0 0 0 4px rgba(87, 199, 255, 0.08);
+    }
+
+    .btn-login {
+      width: 100%;
+      height: 46px;
+      margin-top: 6px;
+      border: 0;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(90deg, #56bafc, #8d61ff);
+      box-shadow: 0 16px 34px rgba(91, 143, 255, 0.24);
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .hero-foot {
+      display: none;
+    }
+
+    .login-error {
+      display: none;
+      margin-top: 10px;
+      color: #ff91a0;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      body {
+        overflow: auto;
+      }
+
+      .page {
+        height: auto;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .right-col {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 980px) {
+      body {
+        padding: 16px;
+        overflow: auto;
+      }
+
+      .page {
+        height: auto;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .right-col {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-wrap {
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .headline {
+        font-size: 38px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-value {
+        font-size: 52px;
+      }
+
+      .chart-title {
+        font-size: 18px;
+      }
+
+      .chart-wrap {
+        height: 230px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-orb orb-3"></div>
-
-  <main class="app">
+  <div class="page">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-badge">◉</div>
+        <div class="brand-dot"></div>
         <div>
-          <p class="eyebrow">TRADING COCKPIT</p>
-          <h1>Radar de Mercado</h1>
+          <div class="brand-title">Radar de Mercado</div>
+          <div class="brand-subtitle">Simulação visual institucional</div>
         </div>
       </div>
 
-      <div class="topbar-side">
-        <div class="status-pill">
-          <span class="status-dot"></span>
-          <span id="connectionStatus">Conectando mercado</span>
-        </div>
-        <p id="updateTime">Aguardando atualização...</p>
-      </div>
+      <nav class="nav">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#demonstracao">Demonstração</a>
+        <a href="/login">Entrar</a>
+      </nav>
     </header>
 
-    <section class="hero">
-      <div class="hero-left glass">
-        <div class="hero-head">
-          <p class="section-label">Leitura rápida</p>
-          <h2 id="marketMoodTitle">Preparando radar</h2>
-        </div>
+    <main class="hero-grid">
+      <section class="hero-left">
+        <div class="eyebrow" id="como-funciona">Leitura visual do mini índice</div>
 
-        <p id="marketMoodText" class="hero-text">
-          Carregando dados dos ativos para montar a leitura do mercado.
+        <h1 class="headline">
+          Veja os ativos alinharem e o <span class="headline-accent">WINFUT</span>
+          responder ao cenário.
+        </h1>
+
+        <p class="hero-text">
+          PETR4, VALE3, ICON, IFNC, Juros, EWZ, VIX e DXY se ajustam em tempo real dentro da demo visual para mostrar como o radar traduz contexto em direção.
         </p>
 
-        <div class="sentiment-wrap">
-          <div class="sentiment-header">
-            <span>Compradores</span>
-            <span id="sentimentValue">--</span>
-          </div>
+        <div class="cards-grid" id="demonstracao">
+          <article class="asset-card" data-symbol="PETR4">
+            <div class="asset-top">
+              <div class="asset-symbol">PETR4</div>
+              <div class="asset-bias">Pró-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-PETR4">39,92</div>
+            <div class="asset-change up" id="change-PETR4">+0.18%</div>
+          </article>
 
-          <div class="sentiment-bar">
-            <div id="bullBar" class="sentiment-bull"></div>
-            <div id="bearBar" class="sentiment-bear"></div>
-          </div>
+          <article class="asset-card" data-symbol="VALE3">
+            <div class="asset-top">
+              <div class="asset-symbol">VALE3</div>
+              <div class="asset-bias">Pró-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-VALE3">62,28</div>
+            <div class="asset-change up" id="change-VALE3">+0.07%</div>
+          </article>
 
-          <div class="sentiment-footer">
-            <span id="bullText">Bull 0%</span>
-            <span id="bearText">Bear 0%</span>
-          </div>
+          <article class="asset-card" data-symbol="ICON">
+            <div class="asset-top">
+              <div class="asset-symbol">ICON</div>
+              <div class="asset-bias">Pró-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-ICON">3.301</div>
+            <div class="asset-change up" id="change-ICON">+0.11%</div>
+          </article>
+
+          <article class="asset-card" data-symbol="IFNC">
+            <div class="asset-top">
+              <div class="asset-symbol">IFNC</div>
+              <div class="asset-bias">Pró-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-IFNC">3.517</div>
+            <div class="asset-change flat" id="change-IFNC">+0.05%</div>
+          </article>
+
+          <article class="asset-card" data-symbol="JUROS">
+            <div class="asset-top">
+              <div class="asset-symbol">Juros</div>
+              <div class="asset-bias">Contra-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-JUROS">10,83</div>
+            <div class="asset-change flat" id="change-JUROS">+0.04%</div>
+          </article>
+
+          <article class="asset-card" data-symbol="EWZ">
+            <div class="asset-top">
+              <div class="asset-symbol">EWZ</div>
+              <div class="asset-bias">Pró-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-EWZ">33,81</div>
+            <div class="asset-change up" id="change-EWZ">+0.16%</div>
+          </article>
+
+          <article class="asset-card" data-symbol="VIX">
+            <div class="asset-top">
+              <div class="asset-symbol">VIX</div>
+              <div class="asset-bias">Contra-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-VIX">15,11</div>
+            <div class="asset-change up" id="change-VIX">+0.09%</div>
+          </article>
+
+          <article class="asset-card" data-symbol="DXY">
+            <div class="asset-top">
+              <div class="asset-symbol">DXY</div>
+              <div class="asset-bias">Contra-bolsa</div>
+            </div>
+            <div class="asset-price" id="price-DXY">103,36</div>
+            <div class="asset-change up" id="change-DXY">+0.06%</div>
+          </article>
         </div>
-      </div>
 
-      <div class="hero-right glass">
-        <p class="section-label">Painel tático</p>
+        <section class="chart-card">
+          <div class="chart-head">
+            <div>
+              <div class="chart-mini-label">WINFUT</div>
+              <h2 class="chart-title">Reação do índice ao score combinado</h2>
+            </div>
+            <div class="pill" id="scenarioPill">Cenário neutro</div>
+          </div>
 
-        <div class="mini-stats">
-          <div class="mini-stat">
-            <span class="mini-label">Brasil</span>
-            <strong id="brStrength">--</strong>
+          <div class="chart-wrap">
+            <canvas id="demoChart"></canvas>
           </div>
-          <div class="mini-stat">
-            <span class="mini-label">Global</span>
-            <strong id="globalStrength">--</strong>
-          </div>
-          <div class="mini-stat">
-            <span class="mini-label">Risco</span>
-            <strong id="riskMode">--</strong>
-          </div>
+        </section>
+
+        <div class="hero-foot">
+          <span class="status-dot"></span>
+          <span>Demo visual ativa para apresentar a leitura do radar a potenciais assinantes.</span>
         </div>
+      </section>
 
-        <div class="pulse-card">
-          <span class="pulse-label">Resumo operacional</span>
-          <h3 id="tradeCall">Lendo contexto...</h3>
-          <p id="tradeSummary">
-            Aguardando preços e variações para gerar o resumo do radar.
+      <aside class="right-col">
+        <section class="panel">
+          <div class="panel-label">Radar score</div>
+
+          <div class="score-top">
+            <div>
+              <div class="score-value" id="radarScore">54</div>
+            </div>
+            <div class="pill" id="radarBias">Neutral</div>
+          </div>
+
+          <p class="score-text" id="radarText">
+            Fluxo equilibrado com baixa convicção
           </p>
-        </div>
-      </div>
-    </section>
 
-    <section class="cards-grid">
-      <article class="market-card glass positive-theme" id="card-PETR4">
-        <div class="card-top">
-          <div>
-            <p class="ticker-label">Brasil</p>
-            <h3>PETR4</h3>
+          <div class="score-bar">
+            <div class="score-bar-fill" id="scoreBarFill"></div>
           </div>
-          <span class="card-badge">PETRO</span>
-        </div>
-        <div class="ring ring-cyan"><div class="ring-inner"><span class="price-label">Preço</span><strong id="petr4_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="petr4_change">--</strong></div>
-          <div><p class="bottom-label">Direção</p><strong id="petr4_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="petr4_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="petr4_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="petr4_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
+        </section>
 
-      <article class="market-card glass positive-theme" id="card-VALE3">
-        <div class="card-top">
-          <div><p class="ticker-label">Brasil</p><h3>VALE3</h3></div>
-          <span class="card-badge">VALE</span>
-        </div>
-        <div class="ring ring-purple"><div class="ring-inner"><span class="price-label">Preço</span><strong id="vale3_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="vale3_change">--</strong></div>
-          <div><p class="bottom-label">Direção</p><strong id="vale3_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="vale3_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="vale3_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="vale3_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
+        <section class="panel">
+          <div class="combined-lines">
+            <div>
+              <div class="combined-item-title">Macro global</div>
+              <div class="combined-item-text" id="macroText">
+                Fatores mistos mantêm o índice em observação
+              </div>
+            </div>
 
-      <article class="market-card glass positive-theme" id="card-IFNC">
-        <div class="card-top">
-          <div><p class="ticker-label">Financeiro</p><h3>IFNC</h3></div>
-          <span class="card-badge">SETOR</span>
-        </div>
-        <div class="ring ring-cyan"><div class="ring-inner"><span class="price-label">Preço</span><strong id="ifnc_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="ifnc_change">--</strong></div>
-          <div><p class="bottom-label">Leitura</p><strong id="ifnc_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="ifnc_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="ifnc_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="ifnc_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
+            <div>
+              <div class="combined-item-title">Fluxo Brasil</div>
+              <div class="combined-item-text" id="flowText">
+                Setores se compensam e reduzem convicção
+              </div>
+            </div>
 
-      <article class="market-card glass neutral-theme" id="card-ICON">
-        <div class="card-top">
-          <div><p class="ticker-label">Consumo</p><h3>ICON</h3></div>
-          <span class="card-badge">SETOR</span>
-        </div>
-        <div class="ring ring-blue"><div class="ring-inner"><span class="price-label">Preço</span><strong id="icon_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="icon_change">--</strong></div>
-          <div><p class="bottom-label">Leitura</p><strong id="icon_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="icon_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="icon_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="icon_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
-
-      <article class="market-card glass risk-theme" id="card-DI">
-        <div class="card-top">
-          <div><p class="ticker-label">Juros</p><h3>DI1FUT</h3></div>
-          <span class="card-badge">DI</span>
-        </div>
-        <div class="ring ring-orange"><div class="ring-inner"><span class="price-label">Taxa</span><strong id="di_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="di_change">--</strong></div>
-          <div><p class="bottom-label">Impacto</p><strong id="di_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="di_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="di_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="di_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
-
-      <article class="market-card glass neutral-theme" id="card-EWZ">
-        <div class="card-top">
-          <div><p class="ticker-label">ETF Brasil</p><h3>EWZ</h3></div>
-          <span class="card-badge">NYSE</span>
-        </div>
-        <div class="ring ring-blue"><div class="ring-inner"><span class="price-label">Preço</span><strong id="ewz_price">--</strong></div></div>
-        <div class="card-bottom ewz-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="ewz_change">--</strong></div>
-          <div><p class="bottom-label">Pré / After</p><strong id="ewz_after">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="ewz_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="ewz_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="ewz_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
-
-      <article class="market-card glass risk-theme" id="card-VIX">
-        <div class="card-top">
-          <div><p class="ticker-label">Volatilidade</p><h3>VIX</h3></div>
-          <span class="card-badge">RISK</span>
-        </div>
-        <div class="ring ring-orange"><div class="ring-inner"><span class="price-label">Preço</span><strong id="vix_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="vix_change">--</strong></div>
-          <div><p class="bottom-label">Leitura</p><strong id="vix_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="vix_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="vix_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="vix_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
-
-      <article class="market-card glass dollar-theme" id="card-DXY">
-        <div class="card-top">
-          <div><p class="ticker-label">Dólar Index</p><h3>DXY</h3></div>
-          <span class="card-badge">USD</span>
-        </div>
-        <div class="ring ring-pink"><div class="ring-inner"><span class="price-label">Preço</span><strong id="dxy_price">--</strong></div></div>
-        <div class="card-bottom">
-          <div><p class="bottom-label">Variação</p><strong id="dxy_change">--</strong></div>
-          <div><p class="bottom-label">Leitura</p><strong id="dxy_direction">--</strong></div>
-        </div>
-        <div class="day-range">
-          <div><p class="bottom-label">Mínima %</p><strong id="dxy_low">--</strong></div>
-          <div><p class="bottom-label">Máxima %</p><strong id="dxy_high">--</strong></div>
-          <div class="day-range-full"><p class="bottom-label">Faixa do pregão</p><strong id="dxy_range" class="range-reading neutral">Aguardando...</strong></div>
-        </div>
-      </article>
-    </section>
-
-    <section class="macro-grid">
-      <article class="macro-card glass">
-        <div class="macro-head">
-          <div>
-            <p class="section-label">Calendário econômico</p>
-            <h2>Próximos eventos</h2>
+            <div>
+              <div class="combined-item-title">Viés índice</div>
+              <div class="combined-item-text" id="indexBiasText">
+                Leitura lateral com viés de definição
+              </div>
+            </div>
           </div>
-          <span class="macro-badge">Impacto 2⭐+</span>
-        </div>
-        <div id="macroUpcoming" class="macro-list">
-          <div class="macro-empty">Carregando próximos eventos...</div>
-        </div>
-      </article>
+        </section>
 
-      <article class="macro-card glass">
-        <div class="macro-head">
-          <div>
-            <p class="section-label">Dados já divulgados</p>
-            <h2>Eventos do dia</h2>
-          </div>
-          <span class="macro-badge">Leitura macro</span>
-        </div>
-        <div id="macroReleased" class="macro-list">
-          <div class="macro-empty">Carregando eventos divulgados...</div>
-        </div>
-      </article>
-    </section>
-  </main>
+        <section class="login-card">
+          <h3>Entrar no radar</h3>
+          <p>
+            Acesse seu painel e acompanhe a pressão do mercado.
+          </p>
 
-  <script type="module" src="/assets/js/dashboard.js"></script>
+          <form id="landingLoginForm">
+            <div class="field">
+              <input type="text" id="landingUsername" placeholder="Usuário" autocomplete="username" required />
+            </div>
+
+            <div class="field">
+              <input type="password" id="landingPassword" placeholder="Senha" autocomplete="current-password" required />
+            </div>
+
+            <button type="submit" class="btn-login">Acessar painel</button>
+            <div class="login-error" id="landingLoginError">Não foi possível entrar. Confira usuário e senha.</div>
+          </form>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const loginForm = document.getElementById('landingLoginForm');
+      const errorBox = document.getElementById('landingLoginError');
+
+      if (!loginForm) return;
+
+      loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        errorBox.style.display = 'none';
+
+        const username = document.getElementById('landingUsername').value.trim();
+        const password = document.getElementById('landingPassword').value;
+
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Falha no login');
+          }
+
+          if (data.user && data.user.role === 'admin') {
+            window.location.href = '/admin';
+            return;
+          }
+
+          window.location.href = '/app';
+        } catch (error) {
+          errorBox.style.display = 'block';
+        }
+      });
+    })();
+  </script>
+
+  <script src="/assets/js/demoRadar.js"></script>
 </body>
 </html>

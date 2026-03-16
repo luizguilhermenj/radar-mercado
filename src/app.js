@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const { SESSION_SECRET } = require('./config/env');
+const { SESSION_SECRET, IS_PRODUCTION } = require('./config/env');
 const { PUBLIC_DIR } = require('./config/paths');
 const { initializeDatabase } = require('./db');
 const pageRoutes = require('./routes/pages');
@@ -13,16 +13,21 @@ function createApp() {
 
   const app = express();
 
+  app.disable('x-powered-by');
+  app.set('trust proxy', 1);
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(session({
+    name: 'radar.sid',
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
-      secure: false,
+      secure: IS_PRODUCTION,
       maxAge: 1000 * 60 * 60 * 12
     }
   }));
@@ -33,6 +38,14 @@ function createApp() {
   app.use('/api', authRoutes);
   app.use('/api', userRoutes);
   app.use('/api', marketRoutes);
+
+  app.use((req, res) => {
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'Rota não encontrada.' });
+    }
+
+    return res.redirect(req.session?.user ? '/app' : '/login');
+  });
 
   return app;
 }

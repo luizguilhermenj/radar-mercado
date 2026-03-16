@@ -6,11 +6,19 @@ const { requirePageAuth, requireMasterPage } = require('../middleware/auth');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.redirect(req.session.user ? '/app' : '/login');
+  if (req.session.user) {
+    return res.redirect('/app');
+  }
+
+  return res.sendFile(path.join(VIEWS_DIR, 'index.html'));
 });
 
 router.get('/login', (req, res) => {
-  res.sendFile(path.join(VIEWS_DIR, 'login.html'));
+  if (req.session.user) {
+    return res.redirect('/app');
+  }
+
+  return res.sendFile(path.join(VIEWS_DIR, 'index.html'));
 });
 
 router.get('/app', requirePageAuth, (req, res) => {

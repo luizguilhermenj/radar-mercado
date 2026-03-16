@@ -1,8 +1,16 @@
 const { formatAsset, fetchBrazilQuotes, fetchGlobalQuotes, enrichEwzExtended } = require('./providers');
 const { computeIndiceRadar } = require('./radar');
 const { getEventsSnapshot } = require('./events');
+const { MARKET_CACHE_TTL_MS } = require('../../config/env');
 
-async function getMarketSnapshot() {
+const quoteCache = {
+  value: null,
+  lastSuccess: null,
+  expiresAt: 0,
+  inflight: null
+};
+
+async function buildMarketSnapshot() {
   const [brazil, global] = await Promise.all([
     fetchBrazilQuotes(),
     fetchGlobalQuotes()
@@ -22,7 +30,53 @@ async function getMarketSnapshot() {
   };
 
   payload.indiceRadar = computeIndiceRadar(payload);
+  payload.meta = {
+    generatedAt: new Date().toISOString(),
+    cacheTtlMs: MARKET_CACHE_TTL_MS,
+    sourceMode: 'live'
+  };
+
   return payload;
+}
+
+async function getMarketSnapshot() {
+  const now = Date.now();
+
+  if (quoteCache.value && quoteCache.expiresAt > now) {
+    return quoteCache.value;
+  }
+
+  if (quoteCache.inflight) {
+    return quoteCache.inflight;
+  }
+
+  quoteCache.inflight = buildMarketSnapshot()
+    .then((snapshot) => {
+      quoteCache.value = snapshot;
+      quoteCache.lastSuccess = snapshot;
+      quoteCache.expiresAt = Date.now() + MARKET_CACHE_TTL_MS;
+      return snapshot;
+    })
+    .catch((error) => {
+      if (quoteCache.lastSuccess) {
+        return {
+          ...quoteCache.lastSuccess,
+          meta: {
+            ...(quoteCache.lastSuccess.meta || {}),
+            generatedAt: new Date().toISOString(),
+            sourceMode: 'cached-fallback',
+            stale: true,
+            error: error.message
+          }
+        };
+      }
+      throw error;
+    })
+    .finally(() => {
+      quoteCache.inflight = null;
+    });
+
+  return quoteCache.inflight;
 }
 
 module.exports = {

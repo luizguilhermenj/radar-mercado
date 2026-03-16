@@ -15,6 +15,12 @@ function normalizePlan(plan, fallback = 'monthly') {
   return USER_PLANS.includes(plan) ? plan : fallback;
 }
 
+function parseOptionalDate(value) {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? 'INVALID_DATE' : parsed.toISOString();
+}
+
 router.get('/users', requireMaster, (req, res) => {
   const users = db.prepare('SELECT id, username, role, active, plan, expires_at, created_at FROM users ORDER BY id ASC').all();
   res.json(users.map(formatUserRow));
@@ -25,10 +31,13 @@ router.post('/users', requireMaster, (req, res) => {
   const password = String(req.body.password || '');
   const role = normalizeRole(req.body.role);
   const plan = normalizePlan(req.body.plan);
-  const expiresAt = req.body.expires_at ? new Date(req.body.expires_at).toISOString() : null;
+  const expiresAt = parseOptionalDate(req.body.expires_at);
 
   if (username.length < 3) {
     return res.status(400).json({ error: 'Usuário precisa ter pelo menos 3 caracteres.' });
+  }
+  if (expiresAt === 'INVALID_DATE') {
+    return res.status(400).json({ error: 'Data de vencimento inválida.' });
   }
   if (password.length < 6) {
     return res.status(400).json({ error: 'Senha precisa ter pelo menos 6 caracteres.' });
@@ -66,11 +75,14 @@ router.put('/users/:id', requireMaster, (req, res) => {
   const role = normalizeRole(req.body.role);
   const active = req.body.active === false || req.body.active === 'false' || req.body.active === 0 || req.body.active === '0' ? 0 : 1;
   const plan = normalizePlan(req.body.plan, currentUser.plan || 'monthly');
-  const expiresAt = req.body.expires_at ? new Date(req.body.expires_at).toISOString() : null;
+  const expiresAt = parseOptionalDate(req.body.expires_at);
   const password = String(req.body.password || '');
 
   if (username.length < 3) {
     return res.status(400).json({ error: 'Usuário precisa ter pelo menos 3 caracteres.' });
+  }
+  if (expiresAt === 'INVALID_DATE') {
+    return res.status(400).json({ error: 'Data de vencimento inválida.' });
   }
 
   const exists = db.prepare('SELECT id FROM users WHERE username = ? AND id <> ?').get(username, id);

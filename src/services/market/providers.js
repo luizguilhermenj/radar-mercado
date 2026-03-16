@@ -1,4 +1,5 @@
 const { num } = require('../../utils/number');
+const { MARKET_REQUEST_TIMEOUT_MS } = require('../../config/env');
 
 function formatAsset(price = null, change = null, extra = {}) {
   return { price, change, ...extra };
@@ -18,8 +19,19 @@ function buildAssetFromRow(item) {
   return formatAsset(close, change, { low, high, rangePosition });
 }
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = MARKET_REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function postScanner(url, tickers) {
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -77,7 +89,7 @@ async function enrichEwzExtended(ewz) {
   if (!ewz) return null;
 
   try {
-    const response = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/EWZ?region=US&lang=en-US&includePrePost=true&interval=1m&range=1d');
+    const response = await fetchWithTimeout('https://query1.finance.yahoo.com/v8/finance/chart/EWZ?region=US&lang=en-US&includePrePost=true&interval=1m&range=1d');
     if (!response.ok) return ewz;
 
     const meta = (await response.json())?.chart?.result?.[0]?.meta;
