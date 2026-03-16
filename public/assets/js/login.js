@@ -1,5 +1,3 @@
-import { apiFetch } from './modules/api.js';
-
 const slides = [
   {
     title: 'Potencialize sua leitura do mercado em tempo real',
@@ -55,29 +53,35 @@ let activeSlide = 0;
 let timer = null;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function qs(id) { return document.getElementById(id); }
+function qs(id) {
+  return document.getElementById(id);
+}
 
 function applySlide(index) {
   const data = slides[index];
+
   document.querySelectorAll('.stage-slide').forEach((slide, i) => {
     slide.classList.toggle('active', i === index);
   });
+
   document.querySelectorAll('#stageDots button').forEach((dot, i) => {
     dot.classList.toggle('active', i === index);
   });
 
-  qs('heroTitle').textContent = data.title;
-  qs('heroText').textContent = data.text;
-  qs('sceneHeadline').textContent = data.headline;
-  qs('sceneDescription').textContent = data.description;
-  qs('sceneMetric').textContent = data.metric;
-  qs('sceneMode').textContent = data.mode;
-  qs('sceneCounter').textContent = `${String(index + 1).padStart(2, '0')} / 06`;
+  if (qs('heroTitle')) qs('heroTitle').textContent = data.title;
+  if (qs('heroText')) qs('heroText').textContent = data.text;
+  if (qs('sceneHeadline')) qs('sceneHeadline').textContent = data.headline;
+  if (qs('sceneDescription')) qs('sceneDescription').textContent = data.description;
+  if (qs('sceneMetric')) qs('sceneMetric').textContent = data.metric;
+  if (qs('sceneMode')) qs('sceneMode').textContent = data.mode;
+  if (qs('sceneCounter')) qs('sceneCounter').textContent = `${String(index + 1).padStart(2, '0')} / 06`;
 }
 
 function queueNext() {
   clearTimeout(timer);
+
   if (document.hidden || reducedMotion) return;
+
   timer = window.setTimeout(() => {
     activeSlide = (activeSlide + 1) % slides.length;
     applySlide(activeSlide);
@@ -91,47 +95,31 @@ function goToSlide(index) {
   queueNext();
 }
 
-async function verificarSessaoExistente() {
-  try {
-    await apiFetch('/api/me');
-    window.location.href = '/app';
-  } catch {}
-}
-
-async function onSubmit(event) {
+function entrarDireto(event) {
   event.preventDefault();
+
   const status = qs('loginStatus');
-  status.className = 'auth-status';
-  status.textContent = 'Entrando...';
-
-  const username = qs('username').value.trim();
-  const password = qs('password').value;
-
-  try {
-    await apiFetch('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password })
-    });
-    status.classList.add('success');
-    status.textContent = 'Login realizado. Redirecionando...';
-    window.location.href = '/app';
-  } catch (error) {
-    status.classList.add('error');
-    status.textContent = error.message;
+  if (status) {
+    status.className = 'auth-status success';
+    status.textContent = 'Entrando no painel...';
   }
+
+  window.location.href = '/app';
 }
 
-qs('loginForm')?.addEventListener('submit', onSubmit);
+qs('loginForm')?.addEventListener('submit', entrarDireto);
+
 qs('demoJump')?.addEventListener('click', () => {
   qs('demo')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
 document.querySelectorAll('#stageDots button').forEach((dot) => {
-  dot.addEventListener('click', () => goToSlide(Number(dot.dataset.slide || 0)));
+  dot.addEventListener('click', () => {
+    goToSlide(Number(dot.dataset.slide || 0));
+  });
 });
 
 document.addEventListener('visibilitychange', queueNext);
 
 applySlide(activeSlide);
 queueNext();
-verificarSessaoExistente();

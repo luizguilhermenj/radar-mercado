@@ -1,6 +1,7 @@
 export async function apiFetch(url, options = {}) {
   const response = await fetch(url, {
     cache: 'no-store',
+    credentials: 'include',
     ...options,
     headers: {
       'Content-Type': 'application/json',

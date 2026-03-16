@@ -778,62 +778,32 @@
           </p>
 
           <form id="landingLoginForm">
-            <div class="field">
-              <input type="text" id="landingUsername" placeholder="Usuário" autocomplete="username" required />
-            </div>
+  <div class="field">
+    <input type="text" id="landingUsername" placeholder="Usuário" autocomplete="username" />
+  </div>
 
-            <div class="field">
-              <input type="password" id="landingPassword" placeholder="Senha" autocomplete="current-password" required />
-            </div>
+  <div class="field">
+    <input type="password" id="landingPassword" placeholder="Senha" autocomplete="current-password" />
+  </div>
 
-            <button type="submit" class="btn-login">Acessar painel</button>
-            <div class="login-error" id="landingLoginError">Não foi possível entrar. Confira usuário e senha.</div>
-          </form>
+  <button type="button" class="btn-login" id="landingDirectAccess">Acessar painel</button>
+  <div class="login-error" id="landingLoginError" style="display:none;"></div>
+</form>
         </section>
       </aside>
     </main>
   </div>
 
-  <script>
-    (function () {
-      const loginForm = document.getElementById('landingLoginForm');
-      const errorBox = document.getElementById('landingLoginError');
+<script>
+  (function () {
+    const button = document.getElementById('landingDirectAccess');
+    if (!button) return;
 
-      if (!loginForm) return;
-
-      loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        errorBox.style.display = 'none';
-
-        const username = document.getElementById('landingUsername').value.trim();
-        const password = document.getElementById('landingPassword').value;
-
-        try {
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ username, password })
-          });
-
-          const data = await response.json().catch(() => ({}));
-
-          if (!response.ok) {
-            throw new Error(data.error || 'Falha no login');
-          }
-
-          if (data.user && data.user.role === 'admin') {
-            window.location.href = '/admin';
-            return;
-          }
-
-          window.location.href = '/app';
-        } catch (error) {
-          errorBox.style.display = 'block';
-        }
-      });
-    })();
-  </script>
+    button.addEventListener('click', () => {
+      window.location.href = '/app';
+    });
+  })();
+</script>
 
   <script src="/assets/js/demoRadar.js"></script>
 </body>

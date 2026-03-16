@@ -1,32 +1,24 @@
-const path = require('path');
 const express = require('express');
-const { VIEWS_DIR } = require('../config/paths');
-const { requirePageAuth, requireMasterPage } = require('../middleware/auth');
+const path = require('path');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  if (req.session.user) {
-    return res.redirect('/app');
-  }
+const viewsDir = path.join(__dirname, '../../views');
 
-  return res.sendFile(path.join(VIEWS_DIR, 'index.html'));
+router.get('/', (req, res) => {
+  res.sendFile(path.join(viewsDir, 'index.html'));
 });
 
 router.get('/login', (req, res) => {
-  if (req.session.user) {
-    return res.redirect('/app');
-  }
-
-  return res.sendFile(path.join(VIEWS_DIR, 'index.html'));
+  res.sendFile(path.join(viewsDir, 'index.html'));
 });
 
-router.get('/app', requirePageAuth, (req, res) => {
-  res.sendFile(path.join(VIEWS_DIR, 'app.html'));
+router.get('/app', (req, res) => {
+  res.sendFile(path.join(viewsDir, 'app.html'));
 });
 
-router.get('/admin', requireMasterPage, (req, res) => {
-  res.sendFile(path.join(VIEWS_DIR, 'admin.html'));
+router.get('/admin', (req, res) => {
+  res.sendFile(path.join(viewsDir, 'admin.html'));
 });
 
 module.exports = router;
