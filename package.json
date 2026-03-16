@@ -2,10 +2,10 @@
   "name": "radar-mercado",
   "version": "5.0.0",
   "description": "Radar institucional do mini índice com autenticação e painel administrativo",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node src/server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "engines": {
     "node": ">=18"
