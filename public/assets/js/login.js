@@ -1,3 +1,5 @@
+import { apiFetch } from './modules/api.js';
+
 const slides = [
   {
     title: 'Potencialize sua leitura do mercado em tempo real',
@@ -95,20 +97,54 @@ function goToSlide(index) {
   queueNext();
 }
 
-function entrarDireto(event) {
+async function submitLogin(event) {
   event.preventDefault();
 
-  const status = qs('loginStatus');
-  if (status) {
-    status.className = 'auth-status success';
-    status.textContent = 'Entrando no painel...';
+  const username = String(qs('landingUsername')?.value || '').trim();
+  const password = String(qs('landingPassword')?.value || '');
+  const button = qs('landingDirectAccess');
+  const errorBox = qs('landingLoginError');
+
+  if (errorBox) {
+    errorBox.style.display = 'none';
+    errorBox.textContent = '';
   }
 
-  window.location.href = '/app';
+  if (!username || !password) {
+    if (errorBox) {
+      errorBox.textContent = 'Informe usuário e senha para acessar o radar.';
+      errorBox.style.display = 'block';
+    }
+    return;
+  }
+
+  const originalText = button?.textContent || 'Acessar painel';
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Validando acesso...';
+  }
+
+  try {
+    await apiFetch('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
+    });
+    window.location.href = '/app';
+  } catch (error) {
+    if (errorBox) {
+      errorBox.textContent = error.message || 'Falha ao realizar login.';
+      errorBox.style.display = 'block';
+    }
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalText;
+    }
+  }
 }
 
-qs('loginForm')?.addEventListener('submit', entrarDireto);
-
+qs('landingLoginForm')?.addEventListener('submit', submitLogin);
+qs('landingDirectAccess')?.addEventListener('click', submitLogin);
 qs('demoJump')?.addEventListener('click', () => {
   qs('demo')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
